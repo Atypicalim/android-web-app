@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_launch_page_color">#009E53</color>
+    <color name="app_main_page_color">@color/app_launch_page_color</color>
+    <color name="web_loading_ui_color">@color/app_main_page_color</color>
+    <color name="web_scroll_bar_color">@color/app_main_page_color</color>
+    <color name="web_progress_bar_color">@color/app_main_page_color</color>
+</resources>
