@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Test</string>
-    <string name="video_loading_tip_text">Loading …</string>
-    <string name="back_exit_tip_text">click one more time to exit …</string>
-    <string name="main_web_page_url">https://kompasim.github.io</string>
+    <string name="web_video_loading_tip">Loading …</string>
+    <string name="web_back_exit_tip">click one more time to exit …</string>
+    <string name="web_share_current_tip">sharing current web …</string>
+    <string name="web_open_browser_tip">opening in browser …</string>
+    <string name="web_main_page_url">https://kompasim.github.io</string>
 </resources>

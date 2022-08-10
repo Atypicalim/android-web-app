@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="5dip"
-        android:text="@string/video_loading_tip_text"
+        android:text="@string/web_video_loading_tip"
         android:textColor="?android:attr/textColorPrimary"
         android:inputType="textNoSuggestions"
         android:textSize="14sp" />

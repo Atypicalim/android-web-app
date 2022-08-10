@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -70,7 +71,7 @@ public class WebActivity extends Activity implements IWebPageView,View.OnClickLi
         activity = this;
         super.onCreate(savedInstanceState);
         //
-        String mainUrl = activity.getText(R.string.main_web_page_url).toString();
+        String mainUrl = activity.getText(R.string.web_main_page_url).toString();
         setContentView(R.layout.activity_web);
         ButterKnife.bind(this);
         //加载网页
@@ -80,25 +81,8 @@ public class WebActivity extends Activity implements IWebPageView,View.OnClickLi
         menuLinearLayout = findViewById(R.id.menuLinearLayout);
         boxRelativeLayout = findViewById(R.id.boxRelativeLayout);
         loadingView = findViewById(R.id.loadingView);
-
-
         //设置撤退按钮
-        webView.setOnKeyListener((v, keyCode, event) -> {
-            if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK){
-                if (webView.canGoBack()){
-                    webView.goBack();
-                    return true;
-                }
-                if((System.currentTimeMillis()-exitTime) < 2000){
-                    return true;
-                }
-                Toast.makeText(getApplicationContext(), activity.getString(R.string.back_exit_tip_text), Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-                return true;
-            }
-            return false;
-        });
-
+//        webView.setOnKeyListener((v, keyCode, event) -> activity.onKeyDown(keyCode, event));
         //设置按钮点击事件
         fabMenu = findViewById(R.id.fabMenu);
         fabMenu.setOnClickListener(this);
@@ -311,21 +295,29 @@ public class WebActivity extends Activity implements IWebPageView,View.OnClickLi
         }
     }
 
+    private void checkExitEvent() {
+
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("MY_TEST", "" + keyCode);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //全屏播放退出全屏
             if (mWebChromeClient.inCustomView()) {
+                //全屏播放退出全屏
                 hideCustomView();
                 return true;
-
-                //返回网页上一页
             } else if (webView.canGoBack()) {
+                //返回网页上一页
                 webView.goBack();
                 return true;
-
-                //退出网页
+            } else if((System.currentTimeMillis()-exitTime) > 2000){
+                //推出提示
+                Toast.makeText(getApplicationContext(), activity.getString(R.string.web_back_exit_tip), Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+                return true;
             } else {
+                //推出程序
                 webView.loadUrl("about:blank");
                 finish();
             }
@@ -453,10 +445,9 @@ public class WebActivity extends Activity implements IWebPageView,View.OnClickLi
                     menuLinearLayout.setVisibility(View.VISIBLE);
                     menuIsOpen = true;
                 }
-                //Toast.makeText(WebActivity.this, boxRelativeLayout+"---"+menuLinearLayout, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.open:
-                Toast.makeText(WebActivity.this, "تور كۆرگۈچتە ئېچىلىۋاتىدۇ ...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WebActivity.this, activity.getText(R.string.web_open_browser_tip), Toast.LENGTH_SHORT).show();
                 //在系统浏览器中打开
                 Intent intent = new Intent();
                 intent.setAction("android.intent.action.VIEW");
@@ -470,7 +461,7 @@ public class WebActivity extends Activity implements IWebPageView,View.OnClickLi
                 intentShare.setAction(Intent.ACTION_SEND);
 
                 intentShare.setType("text/plain");
-                intentShare.putExtra(Intent.EXTRA_SUBJECT, "ھەمبەھىرلەش");
+                intentShare.putExtra(Intent.EXTRA_SUBJECT, activity.getText(R.string.web_share_current_tip));
                 intentShare.putExtra(Intent.EXTRA_TEXT, webView.getTitle() + " :\n " + webView.getUrl());
                 intentShare.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(Intent.createChooser(intentShare, getTitle()));
